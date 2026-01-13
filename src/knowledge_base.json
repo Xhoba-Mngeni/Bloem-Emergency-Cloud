@@ -1,0 +1,98 @@
+{
+    "interactions": [
+        {
+            "condition_keyword": "Asthma",
+            "risky_meds": ["Propranolol", "Atenolol", "Carvedilol", "Beta Blocker", "Sotalol", "Aspirin", "NSAIDs"],
+            "severity": "HIGH",
+            "message": "⚠️ DANGER: Risk of Bronchospasm (Asthma Attack). Beta-blockers and NSAIDs are contraindicated.",
+            "reason": "Beta-blockers can cause airway constriction; NSAIDs can trigger bronchospasm in sensitive patients.",
+            "source": "SAMF 2024, Guidelines for Asthma Management"
+        },
+        {
+            "condition_keyword": "Hypertension",
+            "risky_meds": ["Ibuprofen", "Diclofenac", "Naproxen", "Indomethacin", "Advil", "Voltaren"],
+            "severity": "MEDIUM",
+            "message": "⚠️ WARNING: NSAIDs may increase blood pressure and counteract antihypertensive meds.",
+            "reason": "NSAIDs cause fluid retention and vasoconstriction, antagonizing anti-hypertensive effects.",
+            "source": "AHA Guidelines, SAMF"
+        },
+        {
+            "condition_keyword": "Diabetes",
+            "risky_meds": ["Prednisone", "Steroids"],
+            "severity": "MEDIUM",
+            "message": "⚠️ WARNING: Steroids can significantly raise blood sugar levels.",
+            "reason": "Corticosteroids increase insulin resistance and hepatic glucose production.",
+            "source": "ADA Standards of Care"
+        },
+        {
+            "condition_keyword": "Kidney Failure",
+            "risky_meds": ["Ibuprofen", "Naproxen", "Metformin"],
+            "severity": "HIGH",
+            "message": "⚠️ DANGER: NSAIDs and Metformin can worsen kidney function or cause lactic acidosis.",
+            "reason": "NSAIDs reduce renal blood flow; Metformin accumulates in renal failure causing lactic acidosis.",
+            "source": "KDIGO Guidelines, SAMF"
+        },
+        {
+            "condition_keyword": "Ulcer",
+            "risky_meds": ["Aspirin", "Ibuprofen", "Advil"],
+            "severity": "HIGH",
+            "message": "⚠️ DANGER: NSAIDs can cause stomach bleeding in ulcer patients.",
+            "reason": "COX-1 inhibition reduces gastric mucosal protection, increasing bleeding risk.",
+            "source": "Gastroenterology Guidelines"
+        },
+        {
+            "condition_keyword": "HIV Positive",
+            "required_meds": ["Tenofovir", "Emtricitabine", "Atripla", "Efavirenz", "Dolutegravir", "ARV"],
+            "severity": "CRITICAL",
+            "message": "🚨 ALERT: Patient is HIV Positive but adherence to ARV therapy is not detected.",
+            "reason": "Discontinuation of ARVs leads to viral rebound and drug resistance.",
+            "source": "SA HIV Clinicians Society"
+        },
+        {
+            "condition_keyword": "Peanut Allergy",
+            "risky_meds": ["Peanut", "Arachis"],
+            "severity": "CRITICAL",
+            "message": "🚨 ANAPHYLAXIS RISK: Medication may contain peanut-derived ingredients.",
+            "reason": "Exposure to allergen can cause life-threatening anaphylaxis.",
+            "source": "Allergy Society of South Africa"
+        },
+        {
+            "condition_keyword": "Peanuts",
+            "risky_meds": ["Peanut", "Arachis"],
+            "severity": "CRITICAL",
+            "message": "🚨 ANAPHYLAXIS RISK: Medication may contain peanut-derived ingredients.",
+            "reason": "Exposure to allergen can cause life-threatening anaphylaxis.",
+            "source": "Allergy Society of South Africa"
+        },
+        {
+            "condition_keyword": "Penicillin",
+            "risky_meds": ["Amoxicillin", "Penicillin", "Augmentin"],
+            "severity": "CRITICAL",
+            "message": "🚨 ALLERGY ALERT: Patient is allergic to Penicillin.",
+            "reason": "Beta-lactam antibiotics can trigger anaphylaxis in sensitized individuals.",
+            "source": "SAMF"
+        },
+        {
+            "condition_keyword": "Sulfa",
+            "risky_meds": ["Bactrim", "Septra", "Sulfamethoxazole"],
+            "severity": "CRITICAL",
+            "message": "🚨 ALLERGY ALERT: Patient is allergic to Sulfa drugs.",
+            "reason": "Sulfonamides can cause severe hypersensitivity reactions (SJS/TEN).",
+            "source": "SAMF"
+        },
+        {
+            "condition_keyword": "Latex",
+            "risky_meds": ["Latex"],
+            "severity": "HIGH",
+            "message": "⚠️ ALLERGY ALERT: Patient has Latex allergy.",
+            "reason": "Contact with latex products (gloves, catheters) can cause anaphylaxis.",
+            "source": "Occupational Health Safety"
+        }
+    ],
+    "valid_medications": [
+        "Propranolol", "Atenolol", "Ventolin", "Metformin", 
+        "Ibuprofen", "Aspirin", "Panado", "Amoxicillin", 
+        "Prednisone", "Warfarin", "Insulin", "Tenofovir", 
+        "Emtricitabine", "Atripla", "Efavirenz", "Dolutegravir"
+    ]
+}

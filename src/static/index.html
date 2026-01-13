@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0056b3">
+    <title>Bloem Emergency Cloud</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div id="network-status" role="alert">⚠️ NO INTERNET CONNECTION - OFFLINE MODE</div>
+
+<div id="loading-overlay" class="hidden" aria-busy="true" role="progressbar">
+    <div class="spinner"></div>
+    <p>Processing Securely...</p>
+</div>
+
+<div class="container">
+    
+    <div id="login-screen" class="center-content">
+        <header style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: var(--primary); margin: 0;">🚑 BEC Portal</h1>
+            <p>Bloemfontein Emergency Cloud</p>
+        </header>
+        <div class="card" style="max-width: 400px; margin: 0 auto; padding: 30px; background: white; border-radius: 8px; border: 2px solid var(--border);">
+            <label for="username" class="sr-only">Username</label>
+            <input type="text" id="username" placeholder="Username (e.g. dr_xhoba)" autocomplete="username">
+            
+            <label for="password" class="sr-only">Password</label>
+            <input type="password" id="password" placeholder="Password" autocomplete="current-password">
+            
+            <div id="mfa-section" class="hidden">
+                <label for="mfa-code" class="sr-only">MFA Code</label>
+                <input type="text" id="mfa-code" placeholder="Enter 2FA Code" autocomplete="one-time-code" style="border-color: var(--primary);">
+            </div>
+
+            <button class="btn btn-primary" onclick="login()">SECURE LOGIN</button>
+            <p id="login-error" class="hidden" style="color: var(--danger); font-weight: bold; text-align: center;">⚠️ Invalid Credentials</p>
+        </div>
+    </div>
+
+    <div id="dashboard" class="hidden">
+        <header class="top-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="user-profile">
+                <strong>Dr. Xhoba</strong> <span class="badge">MD</span>
+            </div>
+            <div class="header-actions">
+                <button onclick="toggleContrast()" style="width: auto; padding: 8px 15px; margin-right: 10px;">👁️ High Contrast</button>
+                <button onclick="startMfaSetup()" style="width: auto; padding: 8px 15px; margin-right: 10px; background: var(--warning); color: white; border: none;">🔐 Setup 2FA</button>
+                <button id="btn-unlock" onclick="adminUnlockUser()" style="width: auto; padding: 8px 15px; margin-right: 10px; background: var(--warning); color: white; border: none; display:none;">🔓 Unlock User</button>
+                <button class="btn btn-secondary" onclick="logout()" style="width: auto;">Sign Out</button>
+            </div>
+        </header>
+
+        <nav class="main-nav" role="navigation" style="margin-bottom: 30px;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button id="btn-home" class="nav-btn active" onclick="showSection('home')">Dashboard</button>
+                <button id="btn-search" class="nav-btn" onclick="showSection('search')">Find Patient</button>
+                <button id="btn-admit" class="nav-btn" onclick="showSection('admit')">Admit New</button>
+                <button id="btn-logs" class="nav-btn" onclick="loadAuditLogs()">Audit Logs</button>
+            </div>
+        </nav>
+
+        <main>
+            <section id="section-home">
+                <div class="stats-grid">
+                    <div class="stat-card"><h3>Active Patients</h3><p id="stat-patients" style="font-size: 2em; font-weight: bold;">-</p></div>
+                    <div class="stat-card"><h3>Security Events</h3><p id="stat-activity" style="font-size: 2em; font-weight: bold;">-</p></div>
+                    <div class="stat-card"><h3>System Status</h3><p id="stat-status" style="font-size: 1.5em; font-weight: bold;">Online</p></div>
+                </div>
+            </section>
+
+            <section id="section-search" class="hidden">
+                <div style="display: flex; gap: 10px; margin-bottom: 30px;">
+                    <input type="text" id="sa-id-input" placeholder="Enter 13-digit SA ID" aria-label="Search Patient ID">
+                    <button class="btn btn-primary" onclick="attemptStandardSearch()" style="width: auto;">SEARCH</button>
+                </div>
+                
+                <div id="break-glass-modal" class="hidden alert-box severity-HIGH" role="alertdialog">
+                    <h2>🔒 RESTRICTED RECORD</h2>
+                    <p>Access requires emergency declaration.</p>
+                    <input type="text" id="access-reason" placeholder="Reason for access...">
+                    <button class="btn btn-danger" onclick="executeBreakGlass()">DECLARE EMERGENCY & ACCESS</button>
+                </div>
+
+                <div id="patient-results" class="hidden">
+                    <h2 id="p-name" style="border-bottom: 2px solid var(--primary); padding-bottom: 10px;"></h2>
+                    
+                    <div class="info-grid">
+                        <div class="info-card"><strong>ID Number:</strong> <span id="p-id"></span></div>
+                        <div class="info-card"><strong>Blood Type:</strong> <span id="p-blood"></span></div>
+                        <div class="info-card"><strong>Contact:</strong> <span id="p-contact"></span></div>
+                        <div class="info-card"><strong>Previous Surgeries:</strong> <span id="p-surgeries"></span></div>
+                        <div class="info-card"><strong>Consent:</strong> <span id="p-consent"></span></div>
+                        <div class="info-card severity-HIGH" style="grid-column: span 2;">
+                            <strong>⚠️ Allergies:</strong> <span id="p-allergies"></span>
+                        </div>
+                    </div>
+                    
+                    <div id="ai-warnings" style="margin-top: 20px;"></div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                        <div><h3>History</h3><ul id="history-list"></ul></div>
+                        <div><h3>Meds</h3><ul id="med-list"></ul></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-admit" class="hidden">
+                <h2>Admit New Patient</h2>
+                <div class="form-grid">
+                    <div style="grid-column: 1 / -1; border-bottom: 2px solid var(--border); margin: 10px 0;">
+                        <h3>Patient Information</h3>
+                    </div>
+                    <input type="text" id="new-id" placeholder="ID Number">
+                    <input type="text" id="new-fname" placeholder="First Name">
+                    <input type="text" id="new-lname" placeholder="Last Name">
+                    
+                    <div style="grid-column: 1 / -1; border-bottom: 2px solid var(--border); margin: 20px 0 10px;">
+                        <h3>Emergency Contact</h3>
+                    </div>
+                    <input type="text" id="new-contact" placeholder="Contact Number">
+                    <input type="text" id="new-ec-name" placeholder="Contact Name">
+                    <input type="text" id="new-ec-surname" placeholder="Contact Surname">
+                    <input type="text" id="new-ec-relation" placeholder="Relationship">
+                    
+                    <div style="grid-column: 1 / -1; border-bottom: 2px solid var(--border); margin: 20px 0 10px;">
+                        <h3>Medical Details</h3>
+                    </div>
+                    <select id="new-blood">
+                        <option value="">Blood Type</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                    <input type="text" id="new-allergies" placeholder="Allergies (Important)">
+                    <input type="text" id="new-surgeries" placeholder="Previous Surgeries">
+                    <input type="text" id="new-condition" placeholder="Primary Diagnosis">
+                    <input type="text" id="new-med" placeholder="Medication">
+                </div>
+                <button class="btn btn-primary" onclick="showReviewModal()">SUBMIT ADMISSION</button>
+            </section>
+
+            <section id="section-logs" class="hidden">
+                <h2>Access Logs</h2>
+                <table id="logs-table" style="width: 100%; border-collapse: collapse;">
+                    <thead><tr style="text-align: left; border-bottom: 2px solid black;"><th>Time</th><th>Doctor</th><th>Reason</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</div>
+
+<div id="confirm-modal" class="hidden" style="position: fixed; top: 8%; left: 8%; right: 8%; background: white; padding: 20px; border: 4px solid var(--primary); box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-height: 84%; overflow: auto;">
+    <h2>Verify Admission</h2>
+    <div style="margin-bottom: 10px;">
+        <h3>Patient Information</h3>
+        <p><strong>ID:</strong> <span id="review-id"></span></p>
+        <p><strong>Name:</strong> <span id="review-name"></span></p>
+    </div>
+    <div style="margin-bottom: 10px;">
+        <h3>Emergency Contact</h3>
+        <p><strong>Number:</strong> <span id="review-ec-number"></span></p>
+        <p><strong>Name:</strong> <span id="review-ec-name"></span></p>
+        <p><strong>Relationship:</strong> <span id="review-ec-relation"></span></p>
+    </div>
+    <div style="margin-bottom: 10px;">
+        <h3>Medical Details</h3>
+        <p><strong>Blood Type:</strong> <span id="review-blood"></span></p>
+        <p><strong>Allergies:</strong> <span id="review-allergies"></span></p>
+        <p><strong>Previous Surgeries:</strong> <span id="review-surgeries"></span></p>
+        <p><strong>Primary Diagnosis:</strong> <span id="review-diagnosis"></span></p>
+        <p><strong>Medication:</strong> <span id="review-med"></span></p>
+    </div>
+    <div style="display:flex; gap: 10px;">
+        <button class="btn btn-primary" onclick="submitFinalPatient()">CONFIRM</button>
+        <button class="btn btn-secondary" onclick="closeReviewModal()">CANCEL</button>
+    </div>
+</div>
+
+<div id="mfa-modal" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; display:flex; align-items:center; justify-content:center;">
+        <div class="card" style="max-width:400px; width:90%; background:var(--card-bg);">
+            <h2>🔐 Setup Two-Factor Auth</h2>
+            <div id="mfa-step-1">
+                <p>Scan this QR code with Google Authenticator:</p>
+                <img id="mfa-qr" src="" style="display:block; margin: 10px auto; width: 200px; height: 200px;">
+                <p>Then enter the code below:</p>
+                <input type="text" id="mfa-verify-code" placeholder="123 456">
+                <input type="hidden" id="mfa-secret-temp">
+                <button class="btn btn-primary" onclick="confirmMfa()">VERIFY & ENABLE</button>
+                <button class="btn btn-secondary" onclick="closeMfaModal()">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
