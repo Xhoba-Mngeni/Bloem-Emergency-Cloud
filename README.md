@@ -1,20 +1,20 @@
-# 🚑 Bloem Emergency Cloud (BEC)
+# Bloem Emergency Cloud (BEC)
 
 **A Secure, AI-Powered Emergency Medical Summary System.**
 *Built for the Bloemfontein Region to enable secure "Break-Glass" data access for emergency doctors.*
 
-## 🌟 Key Features
+##  Key Features
 
-* **⚡ Rapid Patient Search:** Instant retrieval of critical medical history using SA ID Numbers.
-* **🛡️ "Break-Glass" Protocol:** Restricted records (VIPs) and **Consent-Withheld** records are hidden by default and require a logged reason to access (Emergency Override).
-* **🧠 AI Safety Engine:** Automatically detects potentially fatal drug interactions and typo errors. Now includes **Explainability** (Why + Source + Confidence).
-* **🔒 Field-Level Encryption:** Sensitive patient data (Names, Allergies, Conditions) is encrypted at rest using Fernet (AES-128).
-* **👮 Role-Based Access Control (RBAC):** Strict permissions for Admins, Doctors, Nurses, and Paramedics.
-* **⚖️ Legal & Compliance:** Built-in POPIA consent enforcement and automated data retention policies (5-year archival).
-* **📜 Audit Logging:** Every search, view, and override is immutably logged for legal accountability.
-* **📱 Mobile First:** Optimized for tablet and mobile use in ambulances with high-contrast emergency UI.
+* ** Rapid Patient Search:** Instant retrieval of critical medical history using SA ID Numbers.
+* ** "Break-Glass" Protocol:** Restricted records (VIPs) and **Consent-Withheld** records are hidden by default and require a logged reason to access (Emergency Override).
+* ** AI Safety Engine:** Automatically detects potentially fatal drug interactions and typo errors. Now includes **Explainability** (Why + Source + Confidence).
+* ** Field-Level Encryption:** Sensitive patient data (Names, Allergies, Conditions) is encrypted at rest using Fernet (AES-128).
+* ** Role-Based Access Control (RBAC):** Strict permissions for Admins, Doctors, Nurses, and Paramedics.
+* ** Legal & Compliance:** Built-in POPIA consent enforcement and automated data retention policies (5-year archival).
+* ** Audit Logging:** Every search, view, and override is immutably logged for legal accountability.
+* ** Mobile First:** Optimized for tablet and mobile use in ambulances with high-contrast emergency UI.
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 * **Backend:** Python 3.12, FastAPI
 * **Database:** PostgreSQL (with `psycopg2` & connection pooling)
@@ -22,7 +22,7 @@
 * **Frontend:** Vanilla JS (SPA Architecture), HTML5, CSS3
 * **AI Logic:** FuzzyWuzzy (String Matching) + Rule-Based Inference Engine
 
-## 🚀 Quick Start (Local Dev)
+##  Quick Start (Local Dev)
 
 **1. Prerequisites**
 * Python 3.10+
@@ -70,7 +70,7 @@ uvicorn src.main:app --reload
 ```
 Visit `http://localhost:8000` to access the login screen.
 
-## 🔑 Environment & Secrets
+##  Environment & Secrets
 
 - `MASTER_ENCRYPTION_KEY` is required and must be 64 hex characters (32 bytes). The app derives a valid Fernet key from this.
 - `JWT_REFRESH_SECRET_KEY` is optional; if unset, refresh tokens use `JWT_SECRET_KEY`.
@@ -102,7 +102,7 @@ env:
   MASTER_ENCRYPTION_KEY: ${{ secrets.MASTER_ENCRYPTION_KEY }}
 ```
 
-## 🧪 Testing & Compliance
+##  Testing & Compliance
 
 **Run Unit & Security Tests:**
 ```bash
@@ -114,7 +114,7 @@ pytest
 python src/compliance_manager.py
 ```
 
-## 👥 Default Users
+##  Default Users
 
 | Role | Username | Password | Access |
 |------|----------|----------|--------|
