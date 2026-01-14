@@ -1,3 +1,4 @@
+import os
 from .auth import authenticate_user, create_access_token, require_admin, RoleChecker, generate_mfa_secret, get_mfa_uri, verify_mfa_code, generate_qr_base64, create_refresh_token, hash_refresh_token, ALGORITHM
 from fastapi import FastAPI, Depends, HTTPException, Request, Form
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -40,7 +41,8 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 app.add_middleware(SecurityHeadersMiddleware)
 
 # 2. Trusted Host (Prevent Host Header Attacks)
-app.add_middleware(TrustedHostMiddleware, allowed_hosts=["localhost", "127.0.0.1", "::1"])
+allowed_hosts = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts)
 
 # Mount Frontend
 app.mount("/static", StaticFiles(directory="src/static"), name="static")
